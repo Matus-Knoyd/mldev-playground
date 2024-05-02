@@ -1,2 +1,2 @@
 # mldev-playground
-Playground for end to end machine learning models models development
+Playground for end-to-end machine learning models development
