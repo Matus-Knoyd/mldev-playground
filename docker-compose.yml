@@ -1,12 +1,12 @@
 version: "3.3"
 
 services:
-  tracking_server:
+  mlflow_server:
     restart: always
     image: mlflow_server
     container_name: mlflow_server
     build: 
-      context: ./server
+      context: ./mlflow-server
       args:
         PYTHON_VERSION: ${PYTHON_VERSION}
     expose:
@@ -14,8 +14,8 @@ services:
     ports:
       - "${MLFLOW_PORT}:5000"
     volumes:
-      - ./server/container-data/backend-store:/backend-store
-      - ./server/container-data/mlartifacts:/mlartifacts
+      - ./mlflow-server/container-data/backend-store:/backend-store
+      - ./mlflow-server/container-data/mlartifacts:/mlartifacts
     command: >
       mlflow server
       --backend-store-uri sqlite:///backend-store/sqlite.db
@@ -39,5 +39,20 @@ services:
       --port 8888 
       --allow-root 
       --NotebookApp.token=${JUPYTER_TOKEN}
+
+  rest_api:
+    restart: always
+    image: rest_api
+    container_name: rest_api
+    build: 
+      context: ./rest-api
+      args:
+        PYTHON_VERSION: ${PYTHON_VERSION}
+    expose:
+      - "8000"
+    ports:
+      - "${REST_API_PORT}:8000"
+    command: >
+      python app.py
 
 
